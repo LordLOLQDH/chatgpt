@@ -66,6 +66,7 @@ function startNewChat() {
   messageList.replaceChildren();
   welcomeScreen.classList.remove("hidden");
   messageInput.value = "";
+  sendButton.disabled = true;
   messageInput.focus();
   loadConversations();
   $("sidebar").classList.remove("open");
@@ -246,7 +247,7 @@ async function sendMessage(text) {
     if (!userMessageRendered) welcomeScreen.classList.remove("hidden");
   } finally {
     busy = false;
-    sendButton.disabled = false;
+    sendButton.disabled = !messageInput.value.trim();
     messageInput.disabled = false;
     messageInput.focus();
     scrollToBottom();
