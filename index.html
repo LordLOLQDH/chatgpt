@@ -13,26 +13,7 @@
   <script type="module" src="./app.js"></script>
 </head>
 <body>
-  <div id="auth-screen" class="auth-screen">
-    <div class="auth-card">
-      <div class="brand-mark">✳</div>
-      <div class="eyebrow">KDS AI PRESENTS</div>
-      <h1>ChatGPT</h1>
-      <p class="auth-subtitle">Dein Raum für Ideen, Wissen und neue Möglichkeiten.</p>
-      <form id="auth-form">
-        <label for="auth-email">E-Mail-Adresse</label>
-        <input id="auth-email" type="email" autocomplete="email" placeholder="name@beispiel.de" required>
-        <label for="auth-password">Passwort</label>
-        <input id="auth-password" type="password" autocomplete="current-password" placeholder="Mindestens 8 Zeichen" minlength="8" required>
-        <button id="auth-submit" class="primary-button" type="submit">Anmelden <span>→</span></button>
-      </form>
-      <div id="auth-message" class="auth-message" role="status"></div>
-      <p class="auth-switch"><span id="auth-switch-text">Noch kein Konto?</span> <button id="auth-switch" type="button">Registrieren</button></p>
-      <p class="auth-footnote">Eigenständiger KI-Assistent von KDS · Nicht die offizielle OpenAI-App</p>
-    </div>
-  </div>
-
-  <div id="app-shell" class="app-shell hidden">
+  <div id="app-shell" class="app-shell">
     <aside id="sidebar" class="sidebar">
       <div class="sidebar-top">
         <a class="brand" href="./" aria-label="ChatGPT Startseite">
@@ -46,8 +27,7 @@
       <nav id="conversation-list" class="conversation-list" aria-label="Chatverlauf"></nav>
       <div class="sidebar-bottom">
         <div class="account-avatar" id="account-avatar">K</div>
-        <div class="account-details"><strong id="account-email">KDS AI</strong><span>Persönlicher Bereich</span></div>
-        <button id="sign-out" class="icon-button" title="Abmelden" aria-label="Abmelden">↪</button>
+        <div class="account-details"><strong id="account-email">Gastmodus</strong><span>Temporäre Sitzung</span></div>
       </div>
     </aside>
 
