@@ -5,20 +5,13 @@ const SUPABASE_KEY = "sb_publishable_d3hVgDqwTuB63BtfumPwoQ_ngy2ig_c";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const $ = (id) => document.getElementById(id);
-const authScreen = $("auth-screen");
 const appShell = $("app-shell");
-const authForm = $("auth-form");
-const authMessage = $("auth-message");
-const authSubmit = $("auth-submit");
-const authSwitch = $("auth-switch");
-const authSwitchText = $("auth-switch-text");
 const conversationList = $("conversation-list");
 const messageList = $("message-list");
 const welcomeScreen = $("welcome-screen");
 const composer = $("composer");
 const messageInput = $("message-input");
 const sendButton = $("send-button");
-let authMode = "login";
 let session = null;
 let activeConversationId = null;
 let busy = false;
@@ -32,78 +25,15 @@ function toast(message) {
   toastTimer = setTimeout(() => el.classList.remove("show"), 2800);
 }
 
-function setAuthMode(mode) {
-  authMode = mode;
-  authSubmit.innerHTML = mode === "login" ? 'Anmelden <span>→</span>' : 'Konto erstellen <span>→</span>';
-  authSwitchText.textContent = mode === "login" ? "Noch kein Konto?" : "Du hast schon ein Konto?";
-  authSwitch.textContent = mode === "login" ? "Registrieren" : "Anmelden";
-  $("auth-password").autocomplete = mode === "login" ? "current-password" : "new-password";
-  authMessage.textContent = "";
-}
-
-authSwitch.addEventListener("click", () => setAuthMode(authMode === "login" ? "signup" : "login"));
-
-authForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const email = $("auth-email").value.trim();
-  const password = $("auth-password").value;
-  authSubmit.disabled = true;
-  authMessage.textContent = "Einen Moment …";
-  try {
-    if (authMode === "login") {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      await enterApp(data.session);
-    } else {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: window.location.origin + window.location.pathname },
-      });
-      if (error) throw error;
-      if (data.session) {
-        await enterApp(data.session);
-      } else {
-        authMessage.textContent = "Fast fertig: Bestätige deine E-Mail-Adresse über den zugesandten Link und melde dich danach an.";
-      }
-    }
-  } catch (error) {
-    authMessage.textContent = friendlyAuthError(error);
-  } finally {
-    authSubmit.disabled = false;
-  }
-});
-
-function friendlyAuthError(error) {
-  const message = String(error?.message || "");
-  if (/Invalid login credentials/i.test(message)) return "E-Mail oder Passwort ist falsch.";
-  if (/already registered/i.test(message)) return "Für diese E-Mail gibt es bereits ein Konto. Melde dich an.";
-  if (/password/i.test(message)) return "Das Passwort muss mindestens 8 Zeichen lang sein.";
-  if (/email.*not confirmed/i.test(message)) return "Bitte bestätige zuerst deine E-Mail-Adresse.";
-  return message || "Anmeldung fehlgeschlagen. Bitte versuche es erneut.";
-}
-
 async function enterApp(nextSession) {
   if (!nextSession) return;
   session = nextSession;
-  authScreen.classList.add("hidden");
   appShell.classList.remove("hidden");
-  $("account-email").textContent = session.user.email || "Dein Konto";
-  $("account-avatar").textContent = (session.user.email || "K").charAt(0).toUpperCase();
+  $("account-email").textContent = "Gastmodus";
+  $("account-avatar").textContent = "G";
   await loadConversations();
   startNewChat();
 }
-
-async function leaveApp() {
-  await supabase.auth.signOut();
-  session = null;
-  activeConversationId = null;
-  appShell.classList.add("hidden");
-  authScreen.classList.remove("hidden");
-  messageInput.value = "";
-  messageList.replaceChildren();
-}
-$("sign-out").addEventListener("click", leaveApp);
 
 async function loadConversations() {
   const { data, error } = await supabase
@@ -277,14 +207,23 @@ document.querySelectorAll("[data-prompt]").forEach((button) => {
 $("sidebar-open").addEventListener("click", () => $("sidebar").classList.add("open"));
 $("sidebar-close").addEventListener("click", () => $("sidebar").classList.remove("open"));
 
-const { data: initial } = await supabase.auth.getSession();
-if (initial.session) await enterApp(initial.session);
-supabase.auth.onAuthStateChange((event, nextSession) => {
-  if (event === "SIGNED_OUT") {
-    session = null;
-    appShell.classList.add("hidden");
-    authScreen.classList.remove("hidden");
-  } else if (nextSession && !session) {
-    enterApp(nextSession);
+async function startApp() {
+  try {
+    const { data: current, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) throw sessionError;
+    let activeSession = current.session;
+    if (!activeSession) {
+      const { data, error } = await supabase.auth.signInAnonymously();
+      if (error) throw error;
+      activeSession = data.session;
+    }
+    if (!activeSession) throw new Error("Es konnte keine anonyme Sitzung erstellt werden.");
+    await enterApp(activeSession);
+  } catch (error) {
+    console.error("Startup error:", error);
+    toast("Chat konnte nicht gestartet werden. Bitte prüfe, ob anonyme Anmeldungen in Supabase aktiviert sind.");
+    $("account-email").textContent = "Verbindung erforderlich";
   }
-});
+}
+
+await startApp();
