@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="ChatGPT – dein KI-Assistent, betrieben von KDS AI.">
+  <title>ChatGPT · KDS AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand-mark">✳</div>
+      <div class="eyebrow">KDS AI PRESENTS</div>
+      <h1>ChatGPT</h1>
+      <p class="auth-subtitle">Dein Raum für Ideen, Wissen und neue Möglichkeiten.</p>
+      <form id="auth-form">
+        <label for="auth-email">E-Mail-Adresse</label>
+        <input id="auth-email" type="email" autocomplete="email" placeholder="name@beispiel.de" required>
+        <label for="auth-password">Passwort</label>
+        <input id="auth-password" type="password" autocomplete="current-password" placeholder="Mindestens 8 Zeichen" minlength="8" required>
+        <button id="auth-submit" class="primary-button" type="submit">Anmelden <span>→</span></button>
+      </form>
+      <div id="auth-message" class="auth-message" role="status"></div>
+      <p class="auth-switch"><span id="auth-switch-text">Noch kein Konto?</span> <button id="auth-switch" type="button">Registrieren</button></p>
+      <p class="auth-footnote">Eigenständiger KI-Assistent von KDS · Nicht die offizielle OpenAI-App</p>
+    </div>
+  </div>
+
+  <div id="app-shell" class="app-shell hidden">
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-top">
+        <a class="brand" href="./" aria-label="ChatGPT Startseite">
+          <span class="brand-mark small">✳</span>
+          <span>ChatGPT</span>
+        </a>
+        <button id="sidebar-close" class="icon-button mobile-only" aria-label="Menü schließen">×</button>
+      </div>
+      <button id="new-chat" class="new-chat-button"><span>＋</span> Neuer Chat</button>
+      <div class="sidebar-label">VERLAUF</div>
+      <nav id="conversation-list" class="conversation-list" aria-label="Chatverlauf"></nav>
+      <div class="sidebar-bottom">
+        <div class="account-avatar" id="account-avatar">K</div>
+        <div class="account-details"><strong id="account-email">KDS AI</strong><span>Persönlicher Bereich</span></div>
+        <button id="sign-out" class="icon-button" title="Abmelden" aria-label="Abmelden">↪</button>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="topbar">
+        <button id="sidebar-open" class="icon-button mobile-only" aria-label="Menü öffnen">☰</button>
+        <div class="topbar-title">ChatGPT <span class="model-pill">KDS AI</span></div>
+        <div class="topbar-status"><span class="status-dot"></span> Bereit</div>
+      </header>
+
+      <section class="chat-stage">
+        <div id="welcome-screen" class="welcome-screen">
+          <div class="welcome-orb">✳</div>
+          <p class="eyebrow">DEIN KI-ASSISTENT</p>
+          <h2>Was möchtest du heute<br><span>entdecken?</span></h2>
+          <p class="welcome-copy">Stelle eine Frage, entwickle eine Idee oder starte ein neues Projekt.</p>
+          <div class="prompt-grid">
+            <button class="prompt-card" data-prompt="Erkläre mir ein schwieriges Thema ganz einfach."><span class="prompt-icon">✧</span><strong>Etwas verstehen</strong><small>Komplexes einfach erklärt</small></button>
+            <button class="prompt-card" data-prompt="Hilf mir, einen guten Lernplan zu erstellen."><span class="prompt-icon">▤</span><strong>Effektiver lernen</strong><small>Struktur und klare Schritte</small></button>
+            <button class="prompt-card" data-prompt="Lass uns eine kreative Idee entwickeln."><span class="prompt-icon">⌘</span><strong>Kreativ werden</strong><small>Ideen gemeinsam ausbauen</small></button>
+            <button class="prompt-card" data-prompt="Hilf mir, ein kleines Softwareprojekt zu planen."><span class="prompt-icon">⌁</span><strong>Etwas entwickeln</strong><small>Von der Idee zum Projekt</small></button>
+          </div>
+        </div>
+        <div id="message-list" class="message-list" aria-live="polite"></div>
+      </section>
+
+      <footer class="composer-wrap">
+        <form id="composer" class="composer">
+          <textarea id="message-input" rows="1" maxlength="6000" placeholder="Nachricht an ChatGPT…" aria-label="Nachricht"></textarea>
+          <div class="composer-bottom">
+            <span class="composer-hint">ChatGPT kann Fehler machen. Überprüfe wichtige Informationen.</span>
+            <button id="send-button" class="send-button" type="submit" aria-label="Nachricht senden">↑</button>
+          </div>
+        </form>
+        <div class="powered-by">POWERED BY <strong>KDS AI</strong></div>
+      </footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+</body>
+</html>
