@@ -117,9 +117,16 @@ function showTyping() {
   avatar.className = "message-avatar";
   avatar.textContent = "✳";
   const content = document.createElement("div");
+  const wrapper = document.createElement("div");
+  wrapper.className = "message-content-wrap";
+  const label = document.createElement("div");
+  label.className = "message-label";
+  label.textContent = "ChatGPT";
+  const content = document.createElement("div");
   content.className = "message-content";
-  content.innerHTML = '<div class="message-label">CHATGPT</div><div class="typing-dots"><i></i><i></i><i></i></div>';
-  row.append(avatar, content);
+  content.innerHTML = '<div class="typing-dots"><i></i><i></i><i></i></div>';
+  wrapper.append(label, content);
+  row.append(avatar, wrapper);
   messageList.append(row);
   scrollToBottom();
 }
@@ -145,38 +152,78 @@ async function ensureConversation(firstMessage) {
   return activeConversationId;
 }
 
+function showSendError(message) {
+  $("send-error")?.remove();
+  const error = document.createElement("div");
+  error.id = "send-error";
+  error.className = "message-error";
+  error.setAttribute("role", "alert");
+  error.textContent = message;
+  messageList.append(error);
+  scrollToBottom();
+}
+
 async function sendMessage(text) {
   const message = String(text || "").trim();
-  if (!message || busy || !session) return;
+  if (!message || busy) return;
+  if (!session) {
+    toast("Die Sitzung wird noch vorbereitet. Bitte kurz warten.");
+    return;
+  }
+
   busy = true;
   sendButton.disabled = true;
   messageInput.disabled = true;
+  $("send-error")?.remove();
   welcomeScreen.classList.add("hidden");
+
+  let userMessageRendered = false;
   try {
     const conversationId = await ensureConversation(message);
     renderMessage({ role: "user", content: message });
+    userMessageRendered = true;
+    showTyping();
+
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) throw sessionError;
+    if (sessionData.session) session = sessionData.session;
+    if (!session?.access_token) throw new Error("Deine Sitzung ist abgelaufen. Bitte lade die Seite neu.");
+
+    const response = await fetch(SUPABASE_URL + "/functions/v1/chatgpt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: SUPABASE_KEY,
+        Authorization: "Bearer " + session.access_token
+      },
+      body: JSON.stringify({ conversation_id: conversationId, message })
+    });
+
+    const raw = await response.text();
+    let result = {};
+    try { result = raw ? JSON.parse(raw) : {}; } catch {}
+    removeTyping();
+
+    if (!response.ok) {
+      const messageText = result.error || result.message ||
+        (response.status === 404 ? "Der KI-Endpunkt wurde nicht gefunden." :
+         response.status === 401 ? "Die Sitzung wurde nicht akzeptiert. Bitte lade die Seite neu." :
+         response.status === 503 ? "Der KI-Dienst ist noch nicht vollständig eingerichtet." :
+         "Der KI-Dienst hat einen Fehler zurückgegeben (HTTP " + response.status + ").");
+      throw new Error(messageText);
+    }
+    if (!result.reply) throw new Error(result.error || "Die KI hat keine Antwort zurückgegeben.");
+
+    renderMessage({ role: "assistant", content: result.reply });
     messageInput.value = "";
     messageInput.style.height = "auto";
-    showTyping();
-    const { data, error } = await supabase.functions.invoke("chatgpt", {
-      body: { conversation_id: conversationId, message },
-    });
-    removeTyping();
-    if (error) {
-      let detail = error.message || "Die Anfrage ist fehlgeschlagen.";
-      try {
-        const context = await error.context?.json();
-        if (context?.error) detail = context.error;
-      } catch {}
-      throw new Error(detail);
-    }
-    if (!data?.reply) throw new Error(data?.error || "Die KI hat nicht geantwortet.");
-    renderMessage({ role: "assistant", content: data.reply });
     await loadConversations();
   } catch (error) {
     removeTyping();
-    renderMessage({ role: "assistant", content: "Die Anfrage ist fehlgeschlagen: " + (error.message || "Unbekannter Fehler") });
-    toast(error.message || "Nachricht konnte nicht gesendet werden.");
+    const messageText = error?.message || "Unbekannter Fehler beim Senden.";
+    showSendError("Nachricht konnte nicht gesendet werden: " + messageText);
+    toast(messageText);
+    if (!userMessageRendered) welcomeScreen.classList.remove("hidden");
   } finally {
     busy = false;
     sendButton.disabled = false;
@@ -192,7 +239,8 @@ composer.addEventListener("submit", (event) => {
 });
 messageInput.addEventListener("input", () => {
   messageInput.style.height = "auto";
-  messageInput.style.height = Math.min(messageInput.scrollHeight, 180) + "px";
+  messageInput.style.height = Math.min(messageInput.scrollHeight, 190) + "px";
+  sendButton.disabled = !messageInput.value.trim() || busy;
 });
 messageInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !event.shiftKey) {
@@ -221,8 +269,10 @@ async function startApp() {
     await enterApp(activeSession);
   } catch (error) {
     console.error("Startup error:", error);
-    toast("Chat konnte nicht gestartet werden. Bitte prüfe, ob anonyme Anmeldungen in Supabase aktiviert sind.");
-    $("account-email").textContent = "Verbindung erforderlich";
+    const startupMessage = error?.message || "Unbekannter Verbindungsfehler";
+    toast("Chat konnte nicht gestartet werden: " + startupMessage);
+    $("account-email").textContent = "Verbindung fehlgeschlagen";
+    showSendError("Die automatische Sitzung konnte nicht gestartet werden. Bitte Seite neu laden. Details: " + startupMessage);
   }
 }
 
