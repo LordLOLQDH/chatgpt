@@ -137,7 +137,6 @@ function showTyping() {
   const avatar = document.createElement("div");
   avatar.className = "message-avatar";
   avatar.textContent = "✳";
-  const content = document.createElement("div");
   const wrapper = document.createElement("div");
   wrapper.className = "message-content-wrap";
   const label = document.createElement("div");
