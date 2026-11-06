@@ -1,6 +1,6 @@
 # ChatGPT · KDS AI
 
-Eigenständiger KI-Assistent mit Supabase-Backend, anonymen Sitzungen und gespeichertem Chatverlauf.
+Eigenständiger KI-Assistent mit Supabase-Backend, anonymen Sitzungen und gespeichertem Chatverlauf. Die Oberfläche orientiert sich am ChatGPT-Chatlayout.
 
 ## Architektur
 
