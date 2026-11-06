@@ -89,3 +89,43 @@ button,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!importan
  .composer-wrap{padding:8px 10px 12px}.composer-hint{max-width:72%;line-height:1.35}
  .message-list{gap:20px}.message-content{font-size:14px}
 }
+
+
+/* Light ChatGPT-inspired theme */
+:root{
+  color-scheme:light;
+  --bg:#ffffff;--sidebar:#f9f9f9;--surface:#f4f4f4;--surface-hover:#ececec;
+  --line:#e5e5e5;--text:#212121;--muted:#777777;--accent:#2563eb;
+}
+body,.app-shell,.main-panel{background:#fff;color:#212121}
+.sidebar{background:#f9f9f9;border-right:1px solid #e5e5e5}
+.brand,.message-content,.welcome-screen h2{color:#212121}
+.brand-mark,.welcome-orb,.message-avatar,.message-row.assistant .message-avatar{background:#f0f0f0;color:#222}
+.new-chat-button{border-color:#e5e5e5;color:#252525}
+.new-chat-button:hover,.conversation-item:hover,.conversation-item.active{background:#eeeeee}
+.conversation-item{color:#333}
+.sidebar-label,.account-details span,.topbar-status,.model-pill{color:#777}
+.sidebar-bottom{border-top-color:#e5e5e5}
+.icon-button{color:#555}
+.icon-button:hover{background:#eeeeee;color:#111}
+.topbar{background:#fff}
+.prompt-card{border-color:#e5e5e5;background:#fff;color:#222}
+.prompt-card:hover{background:#f7f7f7;border-color:#d5d5d5}
+.prompt-icon{color:#666}
+.prompt-card small{color:#777}
+.message-row.user .message-content-wrap{background:#f4f4f4}
+.message-row.user .message-content{color:#222}
+.message-label{color:#555}
+.message-error{color:#9a3412;background:#fff7ed;border-color:#fed7aa}
+.typing-dots i{background:#777}
+.composer-wrap{background:linear-gradient(transparent,#fff 18%)}
+.composer{border-color:#e5e5e5;background:#fff;box-shadow:0 2px 12px #0000000d}
+.composer:focus-within{border-color:#c8c8c8}
+.composer textarea{color:#222}
+.composer textarea::placeholder{color:#888}
+.composer-hint,.powered-by{color:#777}
+.powered-by strong{color:#555}
+.send-button{background:#2563eb;color:#fff}
+.send-button:disabled{opacity:.4}
+.toast{background:#fff;border-color:#ddd;color:#222;box-shadow:0 4px 18px #0002}
+@media(max-width:700px){.sidebar{box-shadow:20px 0 60px #0002}}
