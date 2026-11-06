@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111111">
-  <meta name="description" content="ChatGPT – dein KI-Assistent, betrieben von KDS AI.">
-  <title>ChatGPT · KDS AI</title>
+  <meta name="description" content="ChatGPT · KDS AI ist ein eigenständiges Software-Development-Projekt: eine KI-Webanwendung mit JavaScript-Frontend, Supabase-Backend, APIs und Datenbankintegration.">
+  <meta name="keywords" content="Software Development, AI Application Development, JavaScript, Supabase, Backend Development, API Integration, KDS AI">
+  <title>ChatGPT | AI Software Development · KDS AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -41,14 +42,14 @@
       <section class="chat-stage">
         <div id="welcome-screen" class="welcome-screen">
           <div class="welcome-orb">✳</div>
-          <p class="eyebrow">DEIN KI-ASSISTENT</p>
-          <h2>Was möchtest du heute<br><span>entdecken?</span></h2>
-          <p class="welcome-copy">Stelle eine Frage, entwickle eine Idee oder starte ein neues Projekt.</p>
+          <p class="eyebrow">AI-POWERED SOFTWARE DEVELOPMENT</p>
+          <h2>Entwickle deine<br><span>nächste Idee.</span></h2>
+          <p class="welcome-copy">Unterstützung bei Programmierung, Softwarearchitektur, Debugging und technischen Konzepten. Beschreibe, was du bauen möchtest.</p>
           <div class="prompt-grid">
-            <button class="prompt-card" data-prompt="Erkläre mir ein schwieriges Thema ganz einfach."><span class="prompt-icon">✧</span><strong>Etwas verstehen</strong><small>Komplexes einfach erklärt</small></button>
-            <button class="prompt-card" data-prompt="Hilf mir, einen guten Lernplan zu erstellen."><span class="prompt-icon">▤</span><strong>Effektiver lernen</strong><small>Struktur und klare Schritte</small></button>
-            <button class="prompt-card" data-prompt="Lass uns eine kreative Idee entwickeln."><span class="prompt-icon">⌘</span><strong>Kreativ werden</strong><small>Ideen gemeinsam ausbauen</small></button>
-            <button class="prompt-card" data-prompt="Hilf mir, ein kleines Softwareprojekt zu planen."><span class="prompt-icon">⌁</span><strong>Etwas entwickeln</strong><small>Von der Idee zum Projekt</small></button>
+            <button class="prompt-card" data-prompt="Hilf mir, eine Webanwendung mit HTML, CSS und JavaScript zu entwickeln. Erstelle einen klaren technischen Plan."><span class="prompt-icon">⌘</span><strong>Software entwickeln</strong><small>Von der Idee zum Code</small></button>
+            <button class="prompt-card" data-prompt="Analysiere diesen Code, finde mögliche Fehler und erkläre mir eine saubere Lösung."><span class="prompt-icon">⌁</span><strong>Code analysieren</strong><small>Debugging und Verbesserung</small></button>
+            <button class="prompt-card" data-prompt="Entwirf eine skalierbare Softwarearchitektur für mein Projekt. Berücksichtige Frontend, Backend, APIs und Datenbank."><span class="prompt-icon">▤</span><strong>Architektur planen</strong><small>Systeme und Schnittstellen</small></button>
+            <button class="prompt-card" data-prompt="Erkläre mir ein Software-Development-Konzept anhand eines praktischen Beispiels."><span class="prompt-icon">✧</span><strong>Technik verstehen</strong><small>Konzepte praktisch lernen</small></button>
           </div>
         </div>
         <div id="message-list" class="message-list" aria-live="polite"></div>
@@ -56,13 +57,13 @@
 
       <footer class="composer-wrap">
         <form id="composer" class="composer">
-          <textarea id="message-input" rows="1" maxlength="6000" placeholder="Nachricht an ChatGPT…" aria-label="Nachricht"></textarea>
+          <textarea id="message-input" rows="1" maxlength="6000" placeholder="Frage zu Software Development, Code oder deinem Projekt…" aria-label="Nachricht"></textarea>
           <div class="composer-bottom">
-            <span class="composer-hint">ChatGPT kann Fehler machen. Überprüfe wichtige Informationen.</span>
+            <span class="composer-hint">KI-generierter Code kann Fehler enthalten. Teste ihn vor dem Einsatz.</span>
             <button id="send-button" class="send-button" type="button" aria-label="Nachricht senden">↑</button>
           </div>
         </form>
-        <div class="powered-by">POWERED BY <strong>KDS AI</strong></div>
+        <div class="powered-by">SOFTWARE DEVELOPMENT PROJECT · <strong>POWERED BY KDS AI</strong></div>
       </footer>
     </main>
   </div>
