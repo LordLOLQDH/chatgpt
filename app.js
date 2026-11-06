@@ -237,6 +237,10 @@ composer.addEventListener("submit", (event) => {
   event.preventDefault();
   sendMessage(messageInput.value);
 });
+sendButton.addEventListener("click", (event) => {
+  event.preventDefault();
+  sendMessage(messageInput.value);
+});
 messageInput.addEventListener("input", () => {
   messageInput.style.height = "auto";
   messageInput.style.height = Math.min(messageInput.scrollHeight, 190) + "px";
