@@ -105,6 +105,26 @@ function renderMessage(message) {
   content.className = "message-content";
   content.textContent = message.content;
   wrapper.append(label, content);
+  if (message.role === "assistant") {
+    const actions = document.createElement("div");
+    actions.className = "message-actions";
+    const copy = document.createElement("button");
+    copy.type = "button";
+    copy.className = "message-action";
+    copy.textContent = "Kopieren";
+    copy.setAttribute("aria-label", "Antwort kopieren");
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(message.content || "");
+        copy.textContent = "Kopiert";
+        setTimeout(() => { copy.textContent = "Kopieren"; }, 1400);
+      } catch {
+        toast("Kopieren ist in diesem Browser nicht verfügbar.");
+      }
+    });
+    actions.append(copy);
+    wrapper.append(actions);
+  }
   row.append(avatar, wrapper);
   messageList.append(row);
 }
@@ -239,7 +259,7 @@ composer.addEventListener("submit", (event) => {
 });
 sendButton.addEventListener("click", (event) => {
   event.preventDefault();
-  sendMessage(messageInput.value);
+  if (!busy) sendMessage(messageInput.value);
 });
 messageInput.addEventListener("input", () => {
   messageInput.style.height = "auto";
@@ -258,6 +278,10 @@ document.querySelectorAll("[data-prompt]").forEach((button) => {
 });
 $("sidebar-open").addEventListener("click", () => $("sidebar").classList.add("open"));
 $("sidebar-close").addEventListener("click", () => $("sidebar").classList.remove("open"));
+document.querySelector(".brand").addEventListener("click", (event) => {
+  event.preventDefault();
+  startNewChat();
+});
 
 async function startApp() {
   try {
@@ -280,4 +304,5 @@ async function startApp() {
   }
 }
 
+sendButton.disabled = true;
 await startApp();
